@@ -1,0 +1,74 @@
+<!doctype html>5 PM] Connection to server got closed. Server will restart.
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter student.</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        p {
+            line-height: 1.6;
+        }
+        .sentence {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .narrate {
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        i {
+            font-style: italic;
+            color: rgb(246, 0, 0);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter student.</h1>
+    <label for="voice-speed">Velocidade da voz:</label>
+    <select id="voice-speed">
+        <option value="0.5">Muito lenta</option>
+        <option value="0.75">Lenta</option>
+        <option value="1" selected>Normal</option>
+        <option value="1.25">Rápida</option>
+    </select>
+    <p class="sentence"><span>This student is very diligent and always eager to learn new things.</span><button class="narrate" type="button" data-sentence="This student is very diligent and always eager to learn new things." aria-label="Ouvir a frase">🔊</button></p>
+    <p class="sentence"><span>This is an introduction.</span><button class="narrate" type="button" data-sentence="This is an introduction." aria-label="Ouvir a frase">🔊</button><i>(Esta é uma introdução.)</i></p>
+    <p class="sentence"><span>This introduction provides a brief overview of the student's qualities and dedication to learning.</span><button class="narrate" type="button" data-sentence="This introduction provides a brief overview of the student's qualities and dedication to learning." aria-label="Ouvir a frase">🔊</button></p>
+    <p class="sentence"><span>How to learn more about this student?</span><button class="narrate" type="button" data-sentence="How to learn more about this student?" aria-label="Ouvir a frase">🔊</button><i>(Como aprender mais sobre este estudante?)</i></p>
+
+<script>
+    function getMaleEnglishVoice() {
+        const voices = speechSynthesis.getVoices();
+        const englishVoices = voices.filter((voice) => voice.lang.toLowerCase().startsWith('en'));
+        const maleNames = /david|mark|daniel|alex|guy|tom|george|male/i;
+        return englishVoices.find((voice) => maleNames.test(voice.name))
+            || englishVoices.find((voice) => voice.lang.toLowerCase() === 'en-us')
+            || englishVoices[0];
+    }
+
+    document.querySelectorAll('.narrate').forEach((button) => {
+        button.addEventListener('click', () => {
+            if (!('speechSynthesis' in window)) {
+                alert('A narração não está disponível neste navegador.');
+                return;
+            }
+            speechSynthesis.cancel();
+            const voice = new SpeechSynthesisUtterance(button.dataset.sentence);
+            voice.lang = 'en-US';
+            voice.rate = Number(document.getElementById('voice-speed').value);
+            voice.voice = getMaleEnglishVoice();
+            speechSynthesis.speak(voice);
+        });
+    });
+</script>
+<!-- Additional content can be added here --> <br>
+ <a href="index01.html">01 Treinamento (Introduction)</a> <br>
+</body>
+</html>
